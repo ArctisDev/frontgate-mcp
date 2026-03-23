@@ -1,0 +1,41 @@
+{
+  "run_id": "",
+  "task_id": "",
+  "arm": "codex_baseline",
+  "project_path": "",
+  "started_at": "",
+  "completed_at": "",
+  "status": "draft",
+  "metrics": {
+    "iterations_total": 0,
+    "files_changed": 0,
+    "lines_added": 0,
+    "lines_removed": 0,
+    "arbitrary_spacing_count": 0,
+    "primitive_reuse_count": 0,
+    "frontgate_total_score": null,
+    "frontgate_gate_pass": null,
+    "time_minutes": 0
+  },
+  "artifacts": {
+    "before_screenshot": "",
+    "after_screenshot": "",
+    "diff_file": "",
+    "prompt_file": "",
+    "critique_file": "",
+    "score_file": "",
+    "notes_file": ""
+  },
+  "human_evaluation": {
+    "evaluator": "",
+    "product_alignment": 0,
+    "hierarchy_clarity": 0,
+    "spacing_consistency": 0,
+    "visual_noise": 0,
+    "density_control": 0,
+    "primitive_reuse": 0,
+    "ux_clarity": 0,
+    "overall_preference": 0,
+    "notes": ""
+  }
+}
