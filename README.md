@@ -7,8 +7,8 @@ Local-first MCP server in Go that analyzes Next.js App Router + Tailwind + shadc
 Frontgate acts as a frontend quality layer between you and your AI coding agent. It:
 
 - **Analyzes** your Next.js project's design tokens, spacing patterns, reusable components, routes, and shell layouts
-- **Builds specs** from natural language tasks so Codex/OpenCode generates code that follows your existing patterns
-- **Critiques** generated UI diffs for spacing issues, component overuse, generic language, and missing reuse
+- **Builds art-directed specs** from natural language tasks, combining repo context with your own visual references (see [Visual References Workflow](#visual-references-workflow)) so Codex/OpenCode generate layouts with premium identity
+- **Critiques** generated UI diffs for spacing issues, component overuse, generic language, missing reuse, generic CTA copy, CDN font usage, gradient/shadow abuse, etc.
 - **Scores** output across 10 weighted quality axes (spacing, hierarchy, layout balance, component reuse, token adherence, density, noise, template-likeness, UX clarity, product alignment)
 - **Gates** changes with threshold-based approval/rejection and required corrective actions
 
@@ -47,10 +47,13 @@ python3 scripts/smoke_mcp.py --project /absolute/path/to/your/next-app
 | Tool | Description |
 |------|-------------|
 | `analyze_ui_context` | Scans a Next.js project for framework, design tokens, spacing, primitives, routes, shell patterns, and visual risks |
-| `build_ui_spec` | Converts a natural language task into a structured implementation spec for Codex with component reuse suggestions, constraints, and acceptance criteria |
-| `critique_ui_output` | Analyzes a generated UI diff for arbitrary spacing, generic language, card overuse, missing reuse, and optional Playwright DOM/CSS metrics |
+| `build_ui_spec` | Produces an art-directed design brief that merges repo context with your `references/` images (typography, color, layout, animation, anti-patterns, next/font guidance) |
+| `critique_ui_output` | Audits diffs for spacing issues, generic CTA copy, CDN font usage, gradient/shadow abuse, raw primitives, and optional Playwright DOM/CSS metrics |
 | `score_ui_quality` | Weighted scoring across 10 quality axes with axis-level explanations |
 | `gate_ui_change` | Applies a quality threshold and blocks high-severity issues, returning required corrective actions |
+| `get_design_guidelines` | Retrieves curated guidelines from the benchmarks/skills corpus, filtered by category or query, plus the current art brief |
+| `list_visual_references` | Lists every reference image under `references/` along with descriptions and the aggregated art brief |
+| `add_visual_reference` | Adds/updates metadata for an existing reference image to further tune the art direction |
 
 ## Configuration
 
@@ -92,6 +95,28 @@ tool_timeout_sec = 120
 
 For Playwright support in Codex, configure the Playwright MCP server in your Codex setup as well.
 
+## Visual References Workflow
+
+Frontgate treats your reference board as part of the spec:
+
+1. Drop JPG/PNG/WEBP files into `references/` (subdirectories such as `references/generated-by-mcp/` are also scanned; the repo already ships with 20 samples).
+2. Run `list_visual_references` to inspect the current art brief and descriptions for each image.
+3. Use `add_visual_reference` to describe new images (description + optional `style` and `elements`). Metadata is stored in `references/references.json`.
+4. Every `build_ui_spec` call pulls that art brief and forces the agent to respect it (color, typography, layout, motion, anti-patterns, `next/font` usage).
+5. `get_design_guidelines` also includes the same art brief next to the benchmarks/skills corpus so you can mix deterministic heuristics with your aesthetic direction.
+
+**Font & animation guidance:** the spec explicitly instructs the agent to load fonts via `next/font` (never `<link>`/`@import` from CDN) and to treat motion, gradients, and shapes as purposeful art direction. `critique_ui_output` flags CDN font usage, generic CTA copy, template layouts, and visual noise.
+
+### Playwright package resolution
+
+`critique_ui_output` shells out to Playwright via Node.js. The MCP attempts module resolution in this order:
+
+1. `render_request.working_dir/node_modules` (so install Playwright in the target project: `npm install -D playwright`)
+2. Existing `NODE_PATH` entries
+3. Global npm root (`npm root -g`) — works if you run `npm install -g playwright`
+
+If none of these contain `playwright`, the tool will raise `playwright package not found in current Node resolution path`. Installing locally is still recommended because it keeps browsers/scripts versioned with the project.
+
 ## Project Structure
 
 ```
@@ -113,6 +138,7 @@ frontgate-mcp/
     frontgate_stdio_proxy.py # stdio proxy for debugging
     run_frontgate.sh         # Launch helper
   benchmarks/                # Benchmarks
+  references/                # Visual reference images + references.json art brief
 ```
 
 ## How It Works With AI Agents

@@ -50,6 +50,9 @@ async function run() {
     let repeatedWrappers = 0;
     let overflowing = 0;
     let oversizedSidebarPX = 0;
+    let fixedElements = 0;
+    let absoluteElements = 0;
+    let scrollContainers = 0;
     const fontSizes = new Set();
     const gaps = new Set();
     const paddings = new Set();
@@ -78,6 +81,13 @@ async function run() {
         if (rect.width > oversizedSidebarPX) oversizedSidebarPX = Math.round(rect.width);
       }
 
+      if (style.position === "fixed") fixedElements += 1;
+      if (style.position === "absolute") absoluteElements += 1;
+
+      if (style.overflow === "scroll" || style.overflow === "auto" || style.overflowX === "scroll" || style.overflowX === "auto") {
+        scrollContainers += 1;
+      }
+
       if (
         el.tagName === "DIV" &&
         el.children.length === 1 &&
@@ -93,6 +103,15 @@ async function run() {
     if (overflowing > 0) {
       notes.push("Overflowing elements detected");
     }
+    if (fixedElements > 5) {
+      notes.push("High number of fixed-position elements (" + fixedElements + ") may indicate overlay sprawl");
+    }
+    if (absoluteElements > 15) {
+      notes.push("Excessive absolute-positioned elements (" + absoluteElements + ") suggest layout hacks");
+    }
+    if (scrollContainers > 6) {
+      notes.push("Many scroll containers (" + scrollContainers + ") may cause nested scroll issues");
+    }
 
     return {
       total_elements: visible.length,
@@ -103,6 +122,9 @@ async function run() {
       unique_gaps: Array.from(gaps).sort(),
       unique_paddings: Array.from(paddings).sort().slice(0, 20),
       oversized_sidebar_px: oversizedSidebarPX,
+      fixed_elements: fixedElements,
+      absolute_elements: absoluteElements,
+      scroll_containers: scrollContainers,
       notes
     };
   });
@@ -130,6 +152,9 @@ func Render(ctx context.Context, req types.RenderRequest) (*types.PlaywrightRepo
 	if req.URL == "" {
 		return nil, fmt.Errorf("render_request.url is required")
 	}
+	if !strings.HasPrefix(req.URL, "http://") && !strings.HasPrefix(req.URL, "https://") {
+		return nil, fmt.Errorf("render_request.url must start with http:// or https://")
+	}
 
 	tmpDir, err := os.MkdirTemp("", "frontgate-playwright-*")
 	if err != nil {
@@ -151,6 +176,11 @@ func Render(ctx context.Context, req types.RenderRequest) (*types.PlaywrightRepo
 	if req.WorkingDir != "" {
 		cmd.Dir = req.WorkingDir
 	}
+	env := os.Environ()
+	if nodePath := buildNodePath(req.WorkingDir); nodePath != "" {
+		env = append(env, fmt.Sprintf("NODE_PATH=%s", nodePath))
+	}
+	cmd.Env = env
 	stdout, err := cmd.Output()
 	if err != nil {
 		if ee, ok := err.(*exec.ExitError); ok && len(ee.Stderr) > 0 {
@@ -170,6 +200,9 @@ func Render(ctx context.Context, req types.RenderRequest) (*types.PlaywrightRepo
 		UniqueGaps          []string `json:"unique_gaps"`
 		UniquePaddings      []string `json:"unique_paddings"`
 		OversizedSidebarPX  int      `json:"oversized_sidebar_px"`
+		FixedElements       int      `json:"fixed_elements"`
+		AbsoluteElements    int      `json:"absolute_elements"`
+		ScrollContainers    int      `json:"scroll_containers"`
 		Notes               []string `json:"notes"`
 	}
 	if err := json.Unmarshal(stdout, &raw); err != nil {
@@ -187,6 +220,52 @@ func Render(ctx context.Context, req types.RenderRequest) (*types.PlaywrightRepo
 		UniqueGaps:          raw.UniqueGaps,
 		UniquePaddings:      raw.UniquePaddings,
 		OversizedSidebarPX:  raw.OversizedSidebarPX,
+		FixedElements:       raw.FixedElements,
+		AbsoluteElements:    raw.AbsoluteElements,
+		ScrollContainers:    raw.ScrollContainers,
 		Notes:               raw.Notes,
 	}, nil
+}
+
+func buildNodePath(workingDir string) string {
+	var paths []string
+	if strings.TrimSpace(workingDir) != "" {
+		paths = append(paths, filepath.Join(workingDir, "node_modules"))
+	}
+	if existing := os.Getenv("NODE_PATH"); existing != "" {
+		paths = append(paths, existing)
+	}
+	if globalRoot, err := npmGlobalRoot(); err == nil && globalRoot != "" {
+		paths = append(paths, globalRoot)
+	}
+	if len(paths) == 0 {
+		return ""
+	}
+	sep := string(os.PathListSeparator)
+	seen := map[string]struct{}{}
+	var cleaned []string
+	for _, p := range paths {
+		p = strings.TrimSpace(p)
+		if p == "" {
+			continue
+		}
+		if _, ok := seen[p]; ok {
+			continue
+		}
+		if _, err := os.Stat(p); err != nil {
+			continue
+		}
+		seen[p] = struct{}{}
+		cleaned = append(cleaned, p)
+	}
+	return strings.Join(cleaned, sep)
+}
+
+func npmGlobalRoot() (string, error) {
+	cmd := exec.Command("npm", "root", "-g")
+	output, err := cmd.Output()
+	if err != nil {
+		return "", err
+	}
+	return strings.TrimSpace(string(output)), nil
 }

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -eu
 
-ROOT="/home/silva/Documentos/GitHub/better-frontend-mcp"
+ROOT="/home/silva/Documentos/GitHub/frontgate-mcp"
 LOG_FILE="/tmp/frontgate-mcp.log"
 
 {

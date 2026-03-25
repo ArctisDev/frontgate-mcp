@@ -14,14 +14,16 @@ TEMPLATES_DIR = ROOT / "templates"
 
 
 def list_tasks() -> int:
-    for path in sorted(TASKS_DIR.glob("*.md")):
-        print(path.stem)
+    for path in sorted(TASKS_DIR.glob("**/skill.md")):
+        rel = path.relative_to(TASKS_DIR)
+        skill_id = str(rel.parent)
+        print(skill_id)
     return 0
 
 
 def create_run(task_id: str, arm: str, project_path: str) -> int:
     timestamp = dt.datetime.now().strftime("%Y%m%d-%H%M%S")
-    run_id = f"{timestamp}-{task_id}-{arm}"
+    run_id = f"{timestamp}-{task_id.replace('/', '-')}-{arm}"
     run_dir = RUNS_DIR / run_id
     run_dir.mkdir(parents=True, exist_ok=False)
 
@@ -40,7 +42,7 @@ def create_run(task_id: str, arm: str, project_path: str) -> int:
         "task_id": task_id,
         "arm": arm,
         "project_path": project_path,
-        "task_file": str((TASKS_DIR / f"{task_id}.md").resolve()),
+        "task_file": str((TASKS_DIR / task_id / "skill.md").resolve()),
     }
     (run_dir / "meta.json").write_text(json.dumps(meta, indent=2))
 
@@ -89,7 +91,7 @@ def main(argv: list[str]) -> int:
     if args.command == "list-tasks":
         return list_tasks()
     if args.command == "create":
-        task_file = TASKS_DIR / f"{args.task_id}.md"
+        task_file = TASKS_DIR / args.task_id / "skill.md"
         if not task_file.exists():
             print(f"task not found: {args.task_id}", file=sys.stderr)
             return 1

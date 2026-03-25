@@ -18,6 +18,12 @@ var hardcodedColorRE = regexp.MustCompile(`\b(?:bg|text|border|ring|fill|stroke)
 var headingRE = regexp.MustCompile(`(?i)<h[1-4]\b|text-(?:2xl|3xl|4xl)|font-(?:bold|semibold)`)
 var sidebarWidthRE = regexp.MustCompile(`\b(?:w|basis|min-w|max-w)-(72|80|96|\[[0-9]{3,}px\])\b`)
 var rawPrimitiveRE = regexp.MustCompile(`(?m)^\+.*<(button|input|select|textarea|dialog)\b`)
+var gradientRE = regexp.MustCompile(`\b(?:bg-gradient-to|from-|via-|to-|bg-linear-to)\b`)
+var shadowRE = regexp.MustCompile(`\bshadow-(?:sm|md|lg|xl|2xl|inner|none)\b`)
+var roundedRE = regexp.MustCompile(`\brounded-(?:sm|md|lg|xl|2xl|3xl|full|none)\b`)
+var genericSaaSRE = regexp.MustCompile(`(?i)(get started|sign up free|start free trial|learn more|read more|view all|see all|join now|try it free|book a demo|request demo)`)
+var cdnFontRE = regexp.MustCompile(`(?i)(fonts\.googleapis\.com|fonts\.gstatic\.com|cdn\.jsdelivr\.net.*font|cdnjs\.cloudflare\.com.*font)`)
+var animationRE = regexp.MustCompile(`\b(?:animate-|transition-|duration-|ease-|keyframes)\b`)
 
 func ScoreFromIssues(report *types.CritiqueReport) {
 	if report.Scores.SpacingConsistency == 0 {
@@ -74,6 +80,11 @@ func ScoreFromIssues(report *types.CritiqueReport) {
 		case "density":
 			report.Scores.DensityControl -= penalty
 			report.Scores.LayoutBalance -= penalty / 2
+		case "token_adherence":
+			report.Scores.TokenAdherence -= penalty
+		case "visual":
+			report.Scores.VisualNoise -= penalty
+			report.Scores.TemplateLikeness -= penalty / 2
 		}
 	}
 
@@ -142,6 +153,31 @@ func CountExistingComponentReuse(diff string, components []string) int {
 		count += len(re.FindAllString(diff, -1))
 	}
 	return count
+}
+
+func FindGradientOveruse(diff string) []string {
+	return uniqueStrings(gradientRE.FindAllString(diff, -1))
+}
+
+func CountShadowUsage(diff string) int {
+	return len(shadowRE.FindAllString(diff, -1))
+}
+
+func CountGenericSaaSCTAs(diff string) []string {
+	return uniqueStrings(genericSaaSRE.FindAllString(diff, -1))
+}
+
+func FindCDNFontReferences(diff string) []string {
+	return uniqueStrings(cdnFontRE.FindAllString(diff, -1))
+}
+
+func HasAnimationUsage(diff string) bool {
+	return animationRE.MatchString(diff)
+}
+
+func CountBorderRadiusVariety(diff string) int {
+	matches := roundedRE.FindAllString(diff, -1)
+	return len(uniqueStrings(matches))
 }
 
 func uniqueStrings(items []string) []string {

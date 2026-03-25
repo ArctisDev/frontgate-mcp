@@ -84,7 +84,7 @@ Run:
 
 ### Human Evaluation
 
-See [rubric.md](/home/silva/Documentos/GitHub/better-frontend-mcp/benchmarks/rubric.md).
+See [rubric.md](rubric.md).
 
 Each run should be rated blindly on:
 

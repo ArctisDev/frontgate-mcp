@@ -6,7 +6,9 @@ import (
 	"fmt"
 
 	"github.com/ArctisDev/frontgate/internal/critic"
+	"github.com/ArctisDev/frontgate/internal/guidelines"
 	"github.com/ArctisDev/frontgate/internal/output"
+	"github.com/ArctisDev/frontgate/internal/references"
 	"github.com/ArctisDev/frontgate/internal/repo"
 	"github.com/ArctisDev/frontgate/internal/scoring"
 	"github.com/ArctisDev/frontgate/internal/spec"
@@ -98,6 +100,57 @@ func NewTools() []Tool {
 				return output.Success(result), nil
 			},
 			ReadOnlyHint: true,
+		},
+		{
+			Name:        "get_design_guidelines",
+			Description: "Get design guidelines and art direction principles from the skills corpus. Use this to understand how to create distinctive, non-generic UI designs with strong visual identity, creative layouts, rich color palettes, expressive typography, and purposeful animations.",
+			InputSchema: getDesignGuidelinesSchema(),
+			Handler: func(ctx context.Context, raw json.RawMessage) (types.ToolResult, error) {
+				var in types.GetDesignGuidelinesInput
+				if err := json.Unmarshal(raw, &in); err != nil {
+					return types.ToolResult{}, fmt.Errorf("invalid get_design_guidelines input: %w", err)
+				}
+				result, err := guidelines.GetGuidelines(in.Categories, in.Query)
+				if err != nil {
+					return types.ToolResult{}, err
+				}
+				return output.Success(result), nil
+			},
+			ReadOnlyHint: true,
+		},
+		{
+			Name:        "list_visual_references",
+			Description: "List all visual reference images loaded in the references/ directory. These represent the desired visual direction and aesthetic quality for generated designs.",
+			InputSchema: listVisualReferencesSchema(),
+			Handler: func(ctx context.Context, raw json.RawMessage) (types.ToolResult, error) {
+				var in types.ListVisualReferencesInput
+				if err := json.Unmarshal(raw, &in); err != nil {
+					return types.ToolResult{}, fmt.Errorf("invalid list_visual_references input: %w", err)
+				}
+				result, err := references.GetReferences(in.Directory)
+				if err != nil {
+					return types.ToolResult{}, err
+				}
+				return output.Success(result), nil
+			},
+			ReadOnlyHint: true,
+		},
+		{
+			Name:        "add_visual_reference",
+			Description: "Add a description to an existing visual reference image in the references/ directory. This enriches the art direction context used by build_ui_spec.",
+			InputSchema: addVisualReferenceSchema(),
+			Handler: func(ctx context.Context, raw json.RawMessage) (types.ToolResult, error) {
+				var in types.AddVisualReferenceInput
+				if err := json.Unmarshal(raw, &in); err != nil {
+					return types.ToolResult{}, fmt.Errorf("invalid add_visual_reference input: %w", err)
+				}
+				if in.File == "" {
+					return types.ToolResult{}, fmt.Errorf("file is required")
+				}
+				result := references.AddDescription(in.File, in.Description, in.Style, in.Elements)
+				return output.Success(result), nil
+			},
+			ReadOnlyHint: false,
 		},
 	}
 }
@@ -350,6 +403,9 @@ func playwrightReportSchema() map[string]interface{} {
 		"unique_gaps":          stringArraySchema(),
 		"unique_paddings":      stringArraySchema(),
 		"oversized_sidebar_px": map[string]interface{}{"type": "integer", "minimum": 0},
+		"fixed_elements":       map[string]interface{}{"type": "integer", "minimum": 0},
+		"absolute_elements":    map[string]interface{}{"type": "integer", "minimum": 0},
+		"scroll_containers":    map[string]interface{}{"type": "integer", "minimum": 0},
 		"notes":                stringArraySchema(),
 	}, []string{
 		"url",
@@ -361,6 +417,9 @@ func playwrightReportSchema() map[string]interface{} {
 		"unique_gaps",
 		"unique_paddings",
 		"oversized_sidebar_px",
+		"fixed_elements",
+		"absolute_elements",
+		"scroll_containers",
 		"notes",
 	})
 }
@@ -410,6 +469,52 @@ func stringMapSchema() map[string]interface{} {
 		"type":                 "object",
 		"additionalProperties": map[string]interface{}{"type": "string"},
 	}
+}
+
+func getDesignGuidelinesSchema() map[string]interface{} {
+	return objectSchema(map[string]interface{}{
+		"categories": map[string]interface{}{
+			"type":        "array",
+			"description": "Filter by categories: Design, Layout, Component, UX, CleanCode, Accessibility, VisualNoise, Hierarchy, ProductAlignment, Performance. Omit for all.",
+			"items":       map[string]interface{}{"type": "string"},
+		},
+		"query": map[string]interface{}{
+			"type":        "string",
+			"description": "Search query to filter skills by content (e.g., 'color palette', 'animation', 'typography', 'card', 'grid').",
+		},
+	}, []string{})
+}
+
+func listVisualReferencesSchema() map[string]interface{} {
+	return objectSchema(map[string]interface{}{
+		"directory": map[string]interface{}{
+			"type":        "string",
+			"description": "Optional path to references directory. Defaults to ./references/ relative to the binary.",
+		},
+	}, []string{})
+}
+
+func addVisualReferenceSchema() map[string]interface{} {
+	return objectSchema(map[string]interface{}{
+		"file": map[string]interface{}{
+			"type":        "string",
+			"description": "Filename of the reference image (must already exist in references/ directory).",
+			"minLength":   1,
+		},
+		"description": map[string]interface{}{
+			"type":        "string",
+			"description": "Description of what makes this design visually distinctive.",
+			"minLength":   1,
+		},
+		"style": map[string]interface{}{
+			"type":        "string",
+			"description": "Style tag (e.g., 'premium-dark', 'organic-bold', 'editorial-clean').",
+		},
+		"elements": map[string]interface{}{
+			"type":        "string",
+			"description": "Key visual elements (e.g., 'gradients, 3D shapes, bold typography').",
+		},
+	}, []string{"file", "description"})
 }
 
 func scoreValueSchema() map[string]interface{} {

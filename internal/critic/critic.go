@@ -98,7 +98,7 @@ func Critique(ctx context.Context, in types.CritiqueUIOutputInput) (types.Critiq
 
 	if hardcodedPalette := rules.FindHardcodedPaletteClasses(diff); len(hardcodedPalette) >= 3 {
 		report.Problems = append(report.Problems, types.CritiqueIssue{
-			Category: "spacing",
+			Category: "token_adherence",
 			Severity: "medium",
 			Detail:   fmt.Sprintf("The diff introduces several hardcoded color utility classes: %s", strings.Join(hardcodedPalette, ", ")),
 			Action:   "Prefer semantic tokens and existing color primitives over raw palette utilities when aligning with the product system.",
@@ -122,6 +122,51 @@ func Critique(ctx context.Context, in types.CritiqueUIOutputInput) (types.Critiq
 			Severity: "medium",
 			Detail:   "The diff adds raw form/action primitives without showing reuse of the repository's existing component primitives.",
 			Action:   "Swap raw button, input and dialog markup for existing reusable primitives when they already exist in the repo.",
+		})
+	}
+
+	if genericCTAs := rules.CountGenericSaaSCTAs(diff); len(genericCTAs) >= 2 {
+		report.Problems = append(report.Problems, types.CritiqueIssue{
+			Category: "product",
+			Severity: "medium",
+			Detail:   fmt.Sprintf("Generic SaaS CTA copy detected: %s. These phrases appear on every SaaS landing page and signal a lack of product identity.", strings.Join(genericCTAs, ", ")),
+			Action:   "Replace generic CTAs with copy that reflects the product's actual value proposition and the user's specific intent at that point in the page.",
+		})
+	}
+
+	if cdnRefs := rules.FindCDNFontReferences(diff); len(cdnRefs) > 0 {
+		report.Problems = append(report.Problems, types.CritiqueIssue{
+			Category: "token_adherence",
+			Severity: "high",
+			Detail:   fmt.Sprintf("External CDN font references detected: %s. These can fail to load (404) and cause FOUT/FOIT, degrading the visual experience.", strings.Join(cdnRefs, ", ")),
+			Action:   "Use next/font with Google Fonts or self-hosted font files. Never rely on external CDN links for critical typography.",
+		})
+	}
+
+	if gradients := rules.FindGradientOveruse(diff); len(gradients) >= 8 {
+		report.Problems = append(report.Problems, types.CritiqueIssue{
+			Category: "visual",
+			Severity: "medium",
+			Detail:   fmt.Sprintf("Excessive gradient usage detected (%d gradient-related classes). Overuse of gradients makes the design feel busy and undirected.", len(gradients)),
+			Action:   "Use gradients sparingly for depth and accent. One strong gradient per section is enough. Let neutrals and solid colors do most of the work.",
+		})
+	}
+
+	if shadows := rules.CountShadowUsage(diff); shadows >= 10 {
+		report.Problems = append(report.Problems, types.CritiqueIssue{
+			Category: "visual",
+			Severity: "low",
+			Detail:   fmt.Sprintf("Many shadow utilities detected (%d). Excessive shadows flatten the hierarchy and make everything feel elevated.", shadows),
+			Action:   "Reserve shadows for true depth cues: elevated panels, dropdowns, modals. Remove shadows from cards and containers that don't need elevation.",
+		})
+	}
+
+	if borderRadius := rules.CountBorderRadiusVariety(diff); borderRadius >= 6 {
+		report.Problems = append(report.Problems, types.CritiqueIssue{
+			Category: "visual",
+			Severity: "low",
+			Detail:   fmt.Sprintf("Too many border-radius variants detected (%d). Inconsistent rounding weakens the visual system.", borderRadius),
+			Action:   "Standardize on 2-3 border-radius values (e.g., sm for inputs, lg for cards, full for avatars). Don't mix every available variant.",
 		})
 	}
 
@@ -176,6 +221,54 @@ func critiquePlaywright(report *types.CritiqueReport) {
 			Severity: "medium",
 			Detail:   "Rendered DOM shows a wide spread of unique paddings, suggesting weak spacing consistency.",
 			Action:   "Unify panel, section and card paddings around a tighter spacing scale.",
+		})
+	}
+
+	if pw.MaxDepth > 20 {
+		report.Problems = append(report.Problems, types.CritiqueIssue{
+			Category: "density",
+			Severity: "medium",
+			Detail:   fmt.Sprintf("DOM tree is excessively deep (max depth: %d). Deep nesting increases render cost and makes layout harder to reason about.", pw.MaxDepth),
+			Action:   "Flatten the component tree where possible and remove unnecessary intermediate wrappers.",
+		})
+	}
+	if pw.FixedElements > 5 {
+		report.Problems = append(report.Problems, types.CritiqueIssue{
+			Category: "layout",
+			Severity: "medium",
+			Detail:   fmt.Sprintf("High number of fixed-position elements detected (%d). This may indicate overlay sprawl or stacking issues.", pw.FixedElements),
+			Action:   "Reduce fixed-position elements. Use sticky for headers/sidebars and reserve fixed for true global overlays like toasts.",
+		})
+	}
+	if pw.AbsoluteElements > 15 {
+		report.Problems = append(report.Problems, types.CritiqueIssue{
+			Category: "layout",
+			Severity: "medium",
+			Detail:   fmt.Sprintf("Excessive absolute-positioned elements (%d). Heavy use of absolute positioning suggests layout hacks instead of proper flex/grid flow.", pw.AbsoluteElements),
+			Action:   "Replace absolute positioning with flex/grid layout where possible. Reserve absolute for tooltips, dropdowns and popovers.",
+		})
+	}
+	if pw.ScrollContainers > 6 {
+		report.Problems = append(report.Problems, types.CritiqueIssue{
+			Category: "layout",
+			Severity: "low",
+			Detail:   fmt.Sprintf("Many scroll containers detected (%d). Nested scroll areas create a poor user experience.", pw.ScrollContainers),
+			Action:   "Consolidate scroll areas. Use a single main scroll for the page and only one sidebar/panel scroll if needed.",
+		})
+	}
+
+	for _, note := range pw.Notes {
+		if strings.Contains(strings.ToLower(note), "oversized sidebar") {
+			continue
+		}
+		if strings.Contains(strings.ToLower(note), "overflow") {
+			continue
+		}
+		report.Problems = append(report.Problems, types.CritiqueIssue{
+			Category: "layout",
+			Severity: "low",
+			Detail:   fmt.Sprintf("Playwright detected: %s", note),
+			Action:   "Investigate the rendered DOM signal and determine if it indicates a structural issue.",
 		})
 	}
 }

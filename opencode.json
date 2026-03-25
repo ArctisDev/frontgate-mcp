@@ -1,0 +1,17 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "frontgate": {
+      "type": "local",
+      "command": ["/home/silva/Documentos/GitHub/frontgate-mcp/frontgate-mcp"],
+      "enabled": true,
+      "timeout": 120000
+    },
+    "playwright": {
+      "type": "local",
+      "command": ["npx", "@playwright/mcp@latest", "--isolated"],
+      "enabled": true,
+      "timeout": 25000
+    }
+  }
+}

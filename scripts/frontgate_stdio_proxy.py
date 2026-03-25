@@ -7,7 +7,7 @@ import time
 from pathlib import Path
 
 
-ROOT = Path("/home/silva/Documentos/GitHub/better-frontend-mcp")
+ROOT = Path("/home/silva/Documentos/GitHub/frontgate-mcp")
 SERVER = ROOT / "frontgate-mcp"
 LOG = Path("/tmp/frontgate-mcp-proxy.log")
 

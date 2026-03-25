@@ -129,6 +129,9 @@ type PlaywrightReport struct {
 	UniqueGaps          []string          `json:"unique_gaps"`
 	UniquePaddings      []string          `json:"unique_paddings"`
 	OversizedSidebarPX  int               `json:"oversized_sidebar_px"`
+	FixedElements       int               `json:"fixed_elements"`
+	AbsoluteElements    int               `json:"absolute_elements"`
+	ScrollContainers    int               `json:"scroll_containers"`
 	Notes               []string          `json:"notes"`
 	RawSignals          map[string]string `json:"raw_signals,omitempty"`
 }
@@ -189,4 +192,50 @@ type GateResult struct {
 	Threshold       int      `json:"threshold"`
 	Justification   string   `json:"justification"`
 	RequiredChanges []string `json:"required_changes"`
+}
+
+type GetDesignGuidelinesInput struct {
+	Categories []string `json:"categories,omitempty"`
+	Query      string   `json:"query,omitempty"`
+}
+
+type DesignGuidelinesResult struct {
+	TotalSkills int      `json:"total_skills"`
+	Categories  []string `json:"categories"`
+	Skills      []Skill  `json:"skills"`
+	Summary     string   `json:"summary"`
+}
+
+type Skill struct {
+	Category    string `json:"category"`
+	Name        string `json:"name"`
+	Title       string `json:"title"`
+	Description string `json:"description"`
+	Content     string `json:"content"`
+}
+
+type ListVisualReferencesInput struct {
+	Directory string `json:"directory,omitempty"`
+}
+
+type AddVisualReferenceInput struct {
+	File        string `json:"file"`
+	Description string `json:"description"`
+	Style       string `json:"style,omitempty"`
+	Elements    string `json:"elements,omitempty"`
+}
+
+type VisualReference struct {
+	File        string `json:"file"`
+	Path        string `json:"path"`
+	Description string `json:"description"`
+	Style       string `json:"style"`
+	Elements    string `json:"elements"`
+}
+
+type VisualReferencesResult struct {
+	Count     int               `json:"count"`
+	Directory string            `json:"directory"`
+	ArtBrief  string            `json:"art_brief"`
+	Refs      []VisualReference `json:"references"`
 }
