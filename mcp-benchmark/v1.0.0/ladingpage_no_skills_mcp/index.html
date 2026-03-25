@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arctis Deploy — Infraestrutura sob seu controle</title>
+  <meta name="description" content="Deploy de aplicações com mais controle, menos lock-in e custo racional. Infraestrutura de verdade para quem constrói software.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="nav" id="nav">
+    <div class="nav__container">
+      <a href="#" class="nav__logo">
+        <svg class="nav__logo-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M16 2L4 9V23L16 30L28 23V9L16 2Z" stroke="currentColor" stroke-width="2" fill="none"/>
+          <path d="M16 2V30" stroke="currentColor" stroke-width="1.5" opacity="0.4"/>
+          <path d="M4 9L28 23" stroke="currentColor" stroke-width="1.5" opacity="0.4"/>
+          <path d="M28 9L4 23" stroke="currentColor" stroke-width="1.5" opacity="0.4"/>
+          <circle cx="16" cy="16" r="4" fill="currentColor" opacity="0.9"/>
+        </svg>
+        <span>Arctis</span>
+      </a>
+      <div class="nav__links">
+        <a href="#beneficios" class="nav__link">Benefícios</a>
+        <a href="#como-funciona" class="nav__link">Como funciona</a>
+        <a href="#recursos" class="nav__link">Recursos</a>
+        <a href="#comparativo" class="nav__link">Comparativo</a>
+      </div>
+      <div class="nav__actions">
+        <a href="#" class="nav__link nav__link--login">Entrar</a>
+        <a href="#" class="btn btn--sm btn--primary">Começar grátis</a>
+      </div>
+      <button class="nav__mobile-toggle" id="mobileToggle" aria-label="Menu">
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div class="nav__mobile" id="mobileMenu">
+      <a href="#beneficios" class="nav__mobile-link">Benefícios</a>
+      <a href="#como-funciona" class="nav__mobile-link">Como funciona</a>
+      <a href="#recursos" class="nav__mobile-link">Recursos</a>
+      <a href="#comparativo" class="nav__mobile-link">Comparativo</a>
+      <div class="nav__mobile-actions">
+        <a href="#" class="nav__link nav__link--login">Entrar</a>
+        <a href="#" class="btn btn--primary btn--full">Começar grátis</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero__bg">
+      <div class="hero__grid"></div>
+      <div class="hero__glow hero__glow--1"></div>
+      <div class="hero__glow hero__glow--2"></div>
+    </div>
+    <div class="hero__container">
+      <div class="hero__badge" data-animate="fade-up">
+        <span class="hero__badge-dot"></span>
+        Sem lock-in. Sem surpresas. Sua infraestrutura.
+      </div>
+      <h1 class="hero__title" data-animate="fade-up" data-delay="100">
+        Deploy com<br>
+        <span class="hero__title-accent">controle total</span><br>
+        de infraestrutura
+      </h1>
+      <p class="hero__subtitle" data-animate="fade-up" data-delay="200">
+        O Arctis Deploy entrega automação de deploy sem abstrair sua infraestrutura. 
+        Você define onde roda, quanto paga e como escala. Nós fazemos o pipeline funcionar.
+      </p>
+      <div class="hero__actions" data-animate="fade-up" data-delay="300">
+        <a href="#" class="btn btn--primary btn--lg">
+          Criar conta gratuita
+          <svg class="btn__icon" viewBox="0 0 20 20" fill="none">
+            <path d="M7 4L13 10L7 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+        <a href="#como-funciona" class="btn btn--ghost btn--lg">
+          Ver como funciona
+        </a>
+      </div>
+      <div class="hero__meta" data-animate="fade-up" data-delay="400">
+        <div class="hero__meta-item">
+          <code class="hero__meta-code">$ arctis deploy --env production</code>
+        </div>
+        <div class="hero__meta-divider"></div>
+        <div class="hero__meta-item">
+          <span class="hero__meta-label">Setup em</span>
+          <span class="hero__meta-value">&lt; 5 min</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust Bar -->
+  <section class="trust">
+    <div class="trust__container">
+      <div class="trust__content" data-animate="fade-up">
+        <div class="trust__stats">
+          <div class="trust__stat">
+            <span class="trust__stat-number" data-count="2400">0</span><span class="trust__stat-suffix">+</span>
+            <span class="trust__stat-label">deploys / dia</span>
+          </div>
+          <div class="trust__stat-divider"></div>
+          <div class="trust__stat">
+            <span class="trust__stat-number" data-count="99.97">0</span><span class="trust__stat-suffix">%</span>
+            <span class="trust__stat-label">uptime garantido</span>
+          </div>
+          <div class="trust__stat-divider"></div>
+          <div class="trust__stat">
+            <span class="trust__stat-number">&lt; 4s</span>
+            <span class="trust__stat-label">rollback médio</span>
+          </div>
+          <div class="trust__stat-divider"></div>
+          <div class="trust__stat">
+            <span class="trust__stat-number" data-count="380">0</span><span class="trust__stat-suffix">+</span>
+            <span class="trust__stat-label">empresas em produção</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Benefits -->
+  <section class="benefits" id="beneficios">
+    <div class="benefits__container">
+      <div class="section-header" data-animate="fade-up">
+        <span class="section-label">Por que Arctis</span>
+        <h2 class="section-title">Infraestrutura não deveria ser um obstáculo</h2>
+        <p class="section-desc">
+          A maioria das plataformas de deploy te força a escolher entre simplicidade e controle. 
+          O Arctis elimina esse falso dilema.
+        </p>
+      </div>
+      <div class="benefits__grid">
+        <div class="benefit-card" data-animate="fade-up" data-delay="0">
+          <div class="benefit-card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M12 2L2 7L12 12L22 7L12 2Z"/>
+              <path d="M2 17L12 22L22 17"/>
+              <path d="M2 12L12 17L22 12"/>
+            </svg>
+          </div>
+          <h3 class="benefit-card__title">Zero lock-in de provedor</h3>
+          <p class="benefit-card__desc">
+            Seus deploys rodam sobre sua própria conta cloud. AWS, GCP, Azure — você escolhe. 
+            Se amanhã quiser migrar, migra. Sem refatoração, sem contrato forçado.
+          </p>
+        </div>
+        <div class="benefit-card" data-animate="fade-up" data-delay="100">
+          <div class="benefit-card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 6V12L16 14"/>
+            </svg>
+          </div>
+          <h3 class="benefit-card__title">Custo previsível</h3>
+          <p class="benefit-card__desc">
+            Sem markup agressivo sobre recursos. Você paga o preço real do cloud e uma taxa justa 
+            pela orquestração. Fatura transparente, sem surpresas no fim do mês.
+          </p>
+        </div>
+        <div class="benefit-card" data-animate="fade-up" data-delay="200">
+          <div class="benefit-card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M9 12L11 14L15 10"/>
+              <path d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"/>
+            </svg>
+          </div>
+          <h3 class="benefit-card__title">Automação sem abstração</h3>
+          <p class="benefit-card__desc">
+            O pipeline automatiza build, deploy e escala — mas nunca esconde o que está acontecendo. 
+            Você vê, entende e altera cada parte da infraestrutura.
+          </p>
+        </div>
+        <div class="benefit-card" data-animate="fade-up" data-delay="300">
+          <div class="benefit-card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z"/>
+            </svg>
+          </div>
+          <h3 class="benefit-card__title">Deploy rápido de verdade</h3>
+          <p class="benefit-card__desc">
+            Build incremental, cache distribuído e deploy canário nativo. 
+            Não é só "push to deploy" — é push com estratégia, observabilidade e rollback instantâneo.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="how" id="como-funciona">
+    <div class="how__container">
+      <div class="section-header" data-animate="fade-up">
+        <span class="section-label">Como funciona</span>
+        <h2 class="section-title">Três passos. Zero magia negra.</h2>
+        <p class="section-desc">
+          Conecte seu repositório, configure sua infra e faça deploy. 
+          Sem YAML interminável, sem wizard de 47 etapas.
+        </p>
+      </div>
+      <div class="how__steps">
+        <div class="how__step" data-animate="fade-up" data-delay="0">
+          <div class="how__step-number">01</div>
+          <div class="how__step-content">
+            <h3 class="how__step-title">Conecte seu repositório</h3>
+            <p class="how__step-desc">
+              GitHub, GitLab ou Bitbucket. O Arctis detecta o stack automaticamente — 
+              Node, Python, Go, Rust, containers. Você revisa, nós sugerimos a config base.
+            </p>
+            <div class="how__step-code">
+              <code>$ arctis init --repo github.com/seu/projeto</code>
+            </div>
+          </div>
+        </div>
+        <div class="how__step" data-animate="fade-up" data-delay="150">
+          <div class="how__step-number">02</div>
+          <div class="how__step-content">
+            <h3 class="how__step-title">Configure sua infraestrutura</h3>
+            <p class="how__step-desc">
+              Escolha a região, o tipo de instância e as regras de escala. 
+              Tudo editável, versionado e portável. Nada de configuração presa a plataforma.
+            </p>
+            <div class="how__step-code">
+              <code>arctis.yml</code>
+              <span class="how__step-code-tag">~30 linhas</span>
+            </div>
+          </div>
+        </div>
+        <div class="how__step" data-animate="fade-up" data-delay="300">
+          <div class="how__step-number">03</div>
+          <div class="how__step-content">
+            <h3 class="how__step-title">Deploy. Monitore. Escale.</h3>
+            <p class="how__step-desc">
+              Push no main dispara deploy automático com build cacheado e healthcheck. 
+              Logs, métricas e alertas nativos. Rollback em um comando.
+            </p>
+            <div class="how__step-code">
+              <code>$ arctis rollback --to v2.4.1</code>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="features" id="recursos">
+    <div class="features__container">
+      <div class="section-header" data-animate="fade-up">
+        <span class="section-label">Recursos</span>
+        <h2 class="section-title">Engenharia por baixo do capô</h2>
+        <p class="section-desc">
+          Não são features de marketing. São ferramentas reais para times que 
+          precisam de infraestrutura previsível em produção.
+        </p>
+      </div>
+      <div class="features__grid">
+        <div class="feature" data-animate="fade-up" data-delay="0">
+          <div class="feature__header">
+            <h3 class="feature__title">Deploy canário nativo</h3>
+          </div>
+          <p class="feature__desc">
+            Direcione percentual do tráfego para a nova versão antes de completar o rollout. 
+            Configure thresholds de erro e rollback automático.
+          </p>
+        </div>
+        <div class="feature" data-animate="fade-up" data-delay="75">
+          <div class="feature__header">
+            <h3 class="feature__title">Multi-cloud real</h3>
+          </div>
+          <p class="feature__desc">
+            Rode em AWS, GCP ou Azure simultaneamente. O Arctis normaliza a camada de infra 
+            sem esconder os recursos nativos de cada provedor.
+          </p>
+        </div>
+        <div class="feature" data-animate="fade-up" data-delay="150">
+          <div class="feature__header">
+            <h3 class="feature__title">Infra como código versionada</h3>
+          </div>
+          <p class="feature__desc">
+            Configuração em YAML declarativo, versionada no seu repo. 
+            Diff em cada change, review em PR, apply automático no merge.
+          </p>
+        </div>
+        <div class="feature" data-animate="fade-up" data-delay="225">
+          <div class="feature__header">
+            <h3 class="feature__title">Observabilidade integrada</h3>
+          </div>
+          <p class="feature__desc">
+            Logs estruturados, métricas de deploy, tracing distribuído. 
+            Sem configurar sidecar, sem agente externo. Tudo no painel.
+          </p>
+        </div>
+        <div class="feature" data-animate="fade-up" data-delay="300">
+          <div class="feature__header">
+            <h3 class="feature__title">Secrets e env management</h3>
+          </div>
+          <p class="feature__desc">
+            Criptografia at-rest, injeção por ambiente, rotação automática. 
+            Integra com Vault, AWS Secrets Manager ou o built-in do Arctis.
+          </p>
+        </div>
+        <div class="feature" data-animate="fade-up" data-delay="375">
+          <div class="feature__header">
+            <h3 class="feature__title">Preview environments</h3>
+          </div>
+          <p class="feature__desc">
+            Cada PR ganha um ambiente efêmero com URL única, banco isolado e config completa. 
+            Merge fecha o ambiente automaticamente.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Comparison -->
+  <section class="comparison" id="comparativo">
+    <div class="comparison__container">
+      <div class="section-header" data-animate="fade-up">
+        <span class="section-label">Comparativo</span>
+        <h2 class="section-title">Onde o Arctis se posiciona</h2>
+        <p class="section-desc">
+          Não somos mais um PaaS. Não somos Terraform-as-a-Service. 
+          Somos a camada de orquestração que faltava entre seu código e sua infraestrutura.
+        </p>
+      </div>
+      <div class="comparison__table-wrapper" data-animate="fade-up" data-delay="100">
+        <table class="comparison__table">
+          <thead>
+            <tr>
+              <th class="comparison__th comparison__th--feature"></th>
+              <th class="comparison__th">PaaS tradicional</th>
+              <th class="comparison__th comparison__th--highlight">Arctis Deploy</th>
+              <th class="comparison__th">IaC manual</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="comparison__td comparison__td--feature">Lock-in de provedor</td>
+              <td class="comparison__td"><span class="comparison__tag comparison__tag--high">Alto</span></td>
+              <td class="comparison__td comparison__td--highlight"><span class="comparison__tag comparison__tag--low">Nenhum</span></td>
+              <td class="comparison__td"><span class="comparison__tag comparison__tag--low">Nenhum</span></td>
+            </tr>
+            <tr>
+              <td class="comparison__td comparison__td--feature">Controle de infraestrutura</td>
+              <td class="comparison__td"><span class="comparison__tag comparison__tag--high">Baixo</span></td>
+              <td class="comparison__td comparison__td--highlight"><span class="comparison__tag comparison__tag--low">Total</span></td>
+              <td class="comparison__td"><span class="comparison__tag comparison__tag--low">Total</span></td>
+            </tr>
+            <tr>
+              <td class="comparison__td comparison__td--feature">Velocidade de setup</td>
+              <td class="comparison__td"><span class="comparison__tag comparison__tag--low">Rápido</span></td>
+              <td class="comparison__td comparison__td--highlight"><span class="comparison__tag comparison__tag--low">Rápido</span></td>
+              <td class="comparison__td"><span class="comparison__tag comparison__tag--high">Lento</span></td>
+            </tr>
+            <tr>
+              <td class="comparison__td comparison__td--feature">Custo sobre recursos</td>
+              <td class="comparison__td"><span class="comparison__tag comparison__tag--high">2–5x markup</span></td>
+              <td class="comparison__td comparison__td--highlight"><span class="comparison__tag comparison__tag--low">Taxa fixa</span></td>
+              <td class="comparison__td"><span class="comparison__tag comparison__tag--low">Preço cloud</span></td>
+            </tr>
+            <tr>
+              <td class="comparison__td comparison__td--feature">Automatização de deploy</td>
+              <td class="comparison__td"><span class="comparison__tag comparison__tag--low">Completa</span></td>
+              <td class="comparison__td comparison__td--highlight"><span class="comparison__tag comparison__tag--low">Completa</span></td>
+              <td class="comparison__td"><span class="comparison__tag comparison__tag--high">Manual</span></td>
+            </tr>
+            <tr>
+              <td class="comparison__td comparison__td--feature">Escalabilidade</td>
+              <td class="comparison__td"><span class="comparison__tag comparison__tag--mid">Limitada</span></td>
+              <td class="comparison__td comparison__td--highlight"><span class="comparison__tag comparison__tag--low">Nativa</span></td>
+              <td class="comparison__td"><span class="comparison__tag comparison__tag--low">Nativa</span></td>
+            </tr>
+            <tr>
+              <td class="comparison__td comparison__td--feature">Curva de aprendizado</td>
+              <td class="comparison__td"><span class="comparison__tag comparison__tag--low">Baixa</span></td>
+              <td class="comparison__td comparison__td--highlight"><span class="comparison__tag comparison__tag--low">Baixa</span></td>
+              <td class="comparison__td"><span class="comparison__tag comparison__tag--high">Alta</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="comparison__footnote" data-animate="fade-up" data-delay="200">
+        O Arctis combina a facilidade de um PaaS com o controle da infraestrutura manual — 
+        sem o custo exorbitante de um e sem a complexidade do outro.
+      </p>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta">
+    <div class="cta__container">
+      <div class="cta__content" data-animate="fade-up">
+        <div class="cta__bg">
+          <div class="cta__glow"></div>
+        </div>
+        <h2 class="cta__title">Pare de pagar caro por controle que deveria ser seu</h2>
+        <p class="cta__desc">
+          Crie sua conta, conecte um repositório e faça o primeiro deploy em menos de 5 minutos. 
+          Sem cartão de crédito. Sem compromisso.
+        </p>
+        <div class="cta__actions">
+          <a href="#" class="btn btn--primary btn--lg">
+            Criar conta gratuita
+            <svg class="btn__icon" viewBox="0 0 20 20" fill="none">
+              <path d="M7 4L13 10L7 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
+        <p class="cta__note">Plano gratuito com 3 projetos. Sem limite de deploys.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer__container">
+      <div class="footer__top">
+        <div class="footer__brand">
+          <a href="#" class="nav__logo">
+            <svg class="nav__logo-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M16 2L4 9V23L16 30L28 23V9L16 2Z" stroke="currentColor" stroke-width="2" fill="none"/>
+              <path d="M16 2V30" stroke="currentColor" stroke-width="1.5" opacity="0.4"/>
+              <path d="M4 9L28 23" stroke="currentColor" stroke-width="1.5" opacity="0.4"/>
+              <path d="M28 9L4 23" stroke="currentColor" stroke-width="1.5" opacity="0.4"/>
+              <circle cx="16" cy="16" r="4" fill="currentColor" opacity="0.9"/>
+            </svg>
+            <span>Arctis</span>
+          </a>
+          <p class="footer__brand-desc">
+            Infraestrutura sob seu controle. Deploy sem lock-in.
+          </p>
+        </div>
+        <div class="footer__links">
+          <div class="footer__col">
+            <h4 class="footer__col-title">Produto</h4>
+            <a href="#" class="footer__link">Documentação</a>
+            <a href="#" class="footer__link">Changelog</a>
+            <a href="#" class="footer__link">Preços</a>
+            <a href="#" class="footer__link">Status</a>
+          </div>
+          <div class="footer__col">
+            <h4 class="footer__col-title">Empresa</h4>
+            <a href="#" class="footer__link">Sobre</a>
+            <a href="#" class="footer__link">Blog</a>
+            <a href="#" class="footer__link">Carreiras</a>
+            <a href="#" class="footer__link">Contato</a>
+          </div>
+          <div class="footer__col">
+            <h4 class="footer__col-title">Legal</h4>
+            <a href="#" class="footer__link">Termos de uso</a>
+            <a href="#" class="footer__link">Privacidade</a>
+            <a href="#" class="footer__link">Segurança</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <p class="footer__copy">&copy; 2026 Arctis Deploy. Todos os direitos reservados.</p>
+        <div class="footer__social">
+          <a href="#" class="footer__social-link" aria-label="GitHub">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          </a>
+          <a href="#" class="footer__social-link" aria-label="Twitter">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+          <a href="#" class="footer__social-link" aria-label="Discord">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

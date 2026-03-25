@@ -26,3 +26,8 @@ Thumbs.db
 
 # Temp files
 /tmp/frontgate-mcp*
+**/node_modules/
+**/.next/
+**/dist/
+**/build/
+**/coverage/
